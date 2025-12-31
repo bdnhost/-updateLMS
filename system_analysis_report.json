@@ -1,0 +1,160 @@
+{
+  "summary": {
+    "total_materials": 110,
+    "total_sessions": 77,
+    "total_courses_with_sessions": 10,
+    "total_session_material_links": 245,
+    "total_assignment_material_links": 19,
+    "courses_missing_session_materials": 0,
+    "sessions_without_materials": 40,
+    "global_materials": 0
+  },
+  "courses": {
+    "with_sessions": [
+      "6942ae4afed1bf7040557a50",
+      "694c5fa8ec438f8422e0dc02",
+      "6945d4fd8213de74fd4c0a84",
+      "69472955c43faff26cdb1f27",
+      "694d318d2a4c44e23933cc5c",
+      "69414e2be636c8c8c38af82d",
+      "6950acef4d2ce27b84e13ab7",
+      "69525c47b39f04b627f82cd3",
+      "694d3348341985d618013a5c",
+      "694d3168f337ce53621094a1"
+    ],
+    "missing_session_materials": [],
+    "partial_coverage": [
+      {
+        "course_id": "6942ae4afed1bf7040557a50",
+        "coverage_percent": 14.285714285714285,
+        "sessions_with_materials": 2,
+        "total_sessions": 14
+      },
+      {
+        "course_id": "694c5fa8ec438f8422e0dc02",
+        "coverage_percent": 50.0,
+        "sessions_with_materials": 3,
+        "total_sessions": 6
+      },
+      {
+        "course_id": "6945d4fd8213de74fd4c0a84",
+        "coverage_percent": 80.0,
+        "sessions_with_materials": 8,
+        "total_sessions": 10
+      },
+      {
+        "course_id": "694d318d2a4c44e23933cc5c",
+        "coverage_percent": 33.33333333333333,
+        "sessions_with_materials": 2,
+        "total_sessions": 6
+      },
+      {
+        "course_id": "69525c47b39f04b627f82cd3",
+        "coverage_percent": 8.333333333333332,
+        "sessions_with_materials": 1,
+        "total_sessions": 12
+      },
+      {
+        "course_id": "694d3348341985d618013a5c",
+        "coverage_percent": 33.33333333333333,
+        "sessions_with_materials": 2,
+        "total_sessions": 6
+      },
+      {
+        "course_id": "694d3168f337ce53621094a1",
+        "coverage_percent": 33.33333333333333,
+        "sessions_with_materials": 2,
+        "total_sessions": 6
+      }
+    ]
+  },
+  "materials_distribution": {
+    "by_type": {
+      "document": 25,
+      "link": 23,
+      "presentation": 17,
+      "guide": 17,
+      "video": 12,
+      "lexicon": 5,
+      "other": 4,
+      "code": 2,
+      "assessment_tools": 1,
+      "examples": 1,
+      "reading": 1,
+      "template": 1,
+      "dataset": 1
+    },
+    "by_topic": {
+      "": 46,
+      "Modbus תקשורת": 5,
+      "Ladder Logic בסיסי": 4,
+      "Timers & Counters": 4,
+      "Structured Text": 4,
+      "HMI עיצוב": 4,
+      "PID בקרה": 4,
+      "תכנון מערכת": 4,
+      "הצגה מקצועית": 4,
+      "השוואת PLC למחשב": 1,
+      "טכניקות זיהוי PLC": 1,
+      "מונחון PLC בסיסי": 1,
+      "ספריית סרטונים תעשייתיים": 1,
+      "קלטים ופלטים - Digital vs Analog": 1,
+      "חיווט חשמלי של I/O": 1,
+      "תהליך תכנון מערכת I/O": 1,
+      "מונחון I/O מקצועי": 1,
+      "קטלוג Siemens I/O Modules": 1,
+      "דוגמה מעשית - מערכת מיון": 1,
+      "זיהוי יישומי PLC בתעשייה": 1
+    },
+    "by_course": {
+      "69525c47b39f04b627f82cd3": 44,
+      "69414e2be636c8c8c38af82d": 35,
+      "6945d4fd8213de74fd4c0a84": 15,
+      "6950acef4d2ce27b84e13ab7": 12,
+      "6942ae4afed1bf7040557a50": 2,
+      "69472955c43faff26cdb1f27": 2
+    }
+  },
+  "sessions_needing_materials": [
+    "69525c4cfcc4ee36ed0cc23a",
+    "694d318dd6f37941747d0e18",
+    "69525c4c311008e482e145b1",
+    "694d318e1547e4b6776e893d",
+    "69525c4c415718a4c410485e",
+    "69525c49b82203318a828a48",
+    "69525c4c564772ca5737fe60",
+    "69525c4b0e87047863016c87",
+    "6942ae4b9237e1344e552de9",
+    "694d334d4f5cccfa4533a9cb",
+    "694d3168ead30d5cbd5c9ba9",
+    "6942ae4c9d314308caad7e65",
+    "694d334d697a21a927bdc185",
+    "694c5fa97554d883d24c5c79",
+    "6942ae4bb25a0a00aac1fa28",
+    "6942ae4bbb68a11fdc0ad17d",
+    "69525c4909b5c39ec6f314c3",
+    "694d318d9afb49c9e814052a",
+    "6945d4fea8fc7d5d59cd2d52",
+    "6942ae4c061a24d834909830",
+    "694d3169aa1ec3c6b13fe42a",
+    "694d318d8f612f57714c6ebb",
+    "69525c4aa1d1717e6b8ef6ab",
+    "694d31681547e4b6776e8929",
+    "6942ae4ba81fc7070c73ad89",
+    "694d31699339e3a3027b88ec",
+    "6942ae4bafe25feb357620c2",
+    "694d334ca04808f214f80c38",
+    "6942ae4c1524a227ce244d5f",
+    "6942ae4c50a9edf0731e8a7a",
+    "6942ae4bd5a820b4b864e01b",
+    "69525c496e0548034abad178",
+    "69525c4befb4dd9bccb4c644",
+    "694c5fa8ca0386bc1cac53e7",
+    "694d334b231623014ac3bae2",
+    "6945d4ffd3a7087c29b7865a",
+    "6942ae4c02b61f4169375032",
+    "6942ae4c9d05277e02c90138",
+    "69525c4ca1da2535be3c1e4f",
+    "694c5fa975bb923f3cbbfff7"
+  ]
+}
