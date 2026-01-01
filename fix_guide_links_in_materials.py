@@ -243,13 +243,13 @@ print(f"\n📋 מנתח {len(link_materials)} חומרי link...\n")
 for i, material in enumerate(link_materials, 1):
     material_id = material.get('id', '')
     material_title = material.get('title', '')
-    material_url = material.get('url', '')
+    material_url = material.get('file_url', '') or material.get('url', '')  # נסה file_url ואז url
 
     # בדוק אם זה מדריך שצריך עדכון
     correct_url, guide_key = find_correct_guide_url(material_title, material_url)
 
     if correct_url:
-        # בדוק אם ה-URL שונה מהנוכחי
+        # בדוק אם ה-file_url שונה מהנוכחי
         if material_url != correct_url:
             materials_to_fix[material_id] = {
                 'title': material_title,
@@ -291,9 +291,9 @@ if materials_to_fix:
 
     for material_id, mapping in materials_to_fix.items():
         try:
-            # עדכן את ה-URL
+            # עדכן את ה-file_url
             update_data = {
-                'url': mapping['new_url']
+                'file_url': mapping['new_url']
             }
 
             response = make_api_request(
