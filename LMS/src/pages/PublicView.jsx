@@ -369,12 +369,13 @@ export default function PublicView() {
 
                   if (isHTML) {
                     return (
-                      <div className="overflow-hidden rounded-lg border-2 border-indigo-200 shadow-xl" style={{ height: '600px', maxHeight: 'calc(100vh - 500px)' }}>
+                      <div className="overflow-visible rounded-lg border-2 border-indigo-200 shadow-xl" style={{ height: 'calc(100vh - 350px)', minHeight: '500px' }}>
                         <iframe
                           src={resource.file_url}
                           className="w-full h-full bg-white"
                           sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
                           title={resource.title}
+                          style={{ border: 0 }}
                         />
                       </div>
                     );
@@ -394,12 +395,13 @@ export default function PublicView() {
 
                   if (isLink) {
                     return (
-                      <div className="overflow-hidden rounded-2xl border-2 border-blue-200 shadow-2xl" style={{ height: '600px', maxHeight: 'calc(100vh - 500px)' }}>
+                      <div className="overflow-visible rounded-2xl border-2 border-blue-200 shadow-2xl" style={{ height: 'calc(100vh - 350px)', minHeight: '500px' }}>
                         <iframe
                           src={resource.file_url}
                           className="w-full h-full"
                           sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
                           title={resource.title}
+                          style={{ border: 0 }}
                         />
                       </div>
                     );
