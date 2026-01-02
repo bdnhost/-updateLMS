@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { 
-  Loader2, FileText, Video, Link as LinkIcon, Presentation, File, Download, 
-  ExternalLink, Calendar, Clock, AlertCircle, GraduationCap, Users, BookOpen, 
-  Bell, Mic, ChevronLeft, ChevronRight, UserPlus, UserCircle2, Copy, Target, 
-  Mail, Headphones
+import {
+  Loader2, FileText, Video, Link as LinkIcon, Presentation, File, Download,
+  ExternalLink, Calendar, Clock, AlertCircle, GraduationCap, Users, BookOpen,
+  Bell, Mic, ChevronLeft, ChevronRight, UserPlus, UserCircle2, Copy, Target,
+  Mail, Headphones, Eye
 } from 'lucide-react';
 import InteractiveAssignmentView from '@/components/public/InteractiveAssignmentView';
 import PublicStudentView from '@/components/public/PublicStudentView';
@@ -367,6 +367,79 @@ export default function PublicView() {
               ) : (
                 <p className="text-center text-slate-400">אין תוכן זמין</p>
               )}
+            </div>
+
+            {/* Action Footer */}
+            <div className="border-t-2 border-slate-200 p-6 bg-white flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-lg">
+              {/* Left side: Material info */}
+              <div className="text-sm text-slate-500 font-semibold flex items-center flex-wrap gap-2">
+                {resource.course_name && (
+                  <>
+                    <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                    <span>קורס: {resource.course_name}</span>
+                  </>
+                )}
+                {resource.topic && (
+                  <>
+                    <div className="w-2 h-2 rounded-full bg-purple-500 mr-3" />
+                    <span>נושא: {resource.topic}</span>
+                  </>
+                )}
+              </div>
+
+              {/* Right side: Action buttons */}
+              <div className="flex gap-3 w-full md:w-auto">
+                {resource.file_url && (() => {
+                  const url = resource.file_url.toLowerCase();
+                  const isYouTube = url.match(/(youtube\.com|youtu\.be)/);
+                  const isExternalLink = resource.type === 'link';
+                  const isDownloadable = !isYouTube && !isExternalLink;
+
+                  if (isYouTube) {
+                    // YouTube - Open in YouTube
+                    return (
+                      <Button asChild className="bg-red-600 hover:bg-red-700 text-white shadow-xl flex-1 md:flex-initial">
+                        <a href={resource.file_url} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="h-4 w-4 ml-2" />
+                          פתח ב-YouTube
+                        </a>
+                      </Button>
+                    );
+                  }
+
+                  if (isExternalLink) {
+                    // External link - Open in new window
+                    return (
+                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white shadow-xl flex-1 md:flex-initial">
+                        <a href={resource.file_url} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink className="h-4 w-4 ml-2" />
+                          פתח קישור חיצוני
+                        </a>
+                      </Button>
+                    );
+                  }
+
+                  // Downloadable files (PDF, images, videos, documents, etc.)
+                  return (
+                    <>
+                      {/* View/Open button */}
+                      <Button asChild variant="outline" className="border-2 border-slate-300 flex-1 md:flex-initial">
+                        <a href={resource.file_url} target="_blank" rel="noopener noreferrer">
+                          <Eye className="h-4 w-4 ml-2" />
+                          פתח בחלון חדש
+                        </a>
+                      </Button>
+                      {/* Download button */}
+                      <Button asChild className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-xl flex-1 md:flex-initial">
+                        <a href={resource.file_url} download target="_blank" rel="noopener noreferrer">
+                          <Download className="h-4 w-4 ml-2" />
+                          הורד קובץ
+                        </a>
+                      </Button>
+                    </>
+                  );
+                })()}
+              </div>
             </div>
           </Card>
         ) : isCourse ? (
