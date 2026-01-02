@@ -286,10 +286,9 @@ export default function PublicView() {
                 </div>
               )}
 
-              {resource.generated_content ? (
-                <MaterialContentRenderer resource={resource} />
-              ) : resource.file_url ? (
-                (() => {
+              {(() => {
+                // Check if we have file_url first to determine priority
+                if (resource.file_url) {
                   const url = resource.file_url.toLowerCase();
                   const isYouTube = url.match(/(youtube\.com|youtu\.be)/);
                   const isImage = url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
@@ -377,10 +376,16 @@ export default function PublicView() {
                       <p className="text-xs text-slate-400 mt-6 max-w-md mx-auto break-all">{resource.file_url}</p>
                     </div>
                   );
-                })()
-              ) : (
-                <p className="text-center text-slate-400">אין תוכן זמין</p>
-              )}
+                }
+
+                // If no file_url but has generated_content
+                if (resource.generated_content) {
+                  return <MaterialContentRenderer resource={resource} />;
+                }
+
+                // No content available
+                return <p className="text-center text-slate-400">אין תוכן זמין</p>;
+              })()}
             </div>
 
             {/* Action Footer */}
