@@ -319,7 +319,7 @@ export default function PublicView() {
 
                   if (isHTML) {
                     return (
-                      <div className="overflow-hidden rounded-lg border-2 border-indigo-200 shadow-xl" style={{ height: 'calc(100vh - 400px)', minHeight: '500px' }}>
+                      <div className="overflow-hidden rounded-lg border-2 border-indigo-200 shadow-xl" style={{ height: '600px', maxHeight: 'calc(100vh - 500px)' }}>
                         <iframe
                           src={resource.file_url}
                           className="w-full h-full bg-white"
@@ -344,23 +344,13 @@ export default function PublicView() {
 
                   if (isLink) {
                     return (
-                      <div className="space-y-4">
-                        <div className="w-full overflow-hidden rounded-2xl border-2 border-blue-200 shadow-2xl" style={{ height: 'calc(100vh - 400px)', minHeight: '600px' }}>
-                          <iframe 
-                            src={resource.file_url}
-                            className="w-full h-full"
-                            sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-                            title={resource.title}
-                          />
-                        </div>
-                        <div className="flex items-center justify-center gap-3">
-                          <Button asChild size="sm" variant="outline" className="border-2 border-blue-300 hover:bg-blue-50">
-                            <a href={resource.file_url} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-4 h-4 ml-2" />
-                              פתח בחלון חדש
-                            </a>
-                          </Button>
-                        </div>
+                      <div className="overflow-hidden rounded-2xl border-2 border-blue-200 shadow-2xl" style={{ height: '600px', maxHeight: 'calc(100vh - 500px)' }}>
+                        <iframe
+                          src={resource.file_url}
+                          className="w-full h-full"
+                          sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+                          title={resource.title}
+                        />
                       </div>
                     );
                   }
