@@ -294,6 +294,7 @@ export default function PublicView() {
                   const isYouTube = url.match(/(youtube\.com|youtu\.be)/);
                   const isImage = url.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i);
                   const isPDF = url.match(/\.pdf$/i);
+                  const isHTML = url.match(/\.(html|htm)$/i);
                   const isVideo = url.match(/\.(mp4|webm|ogg|mov|avi)$/i);
                   const isLink = resource.type === 'link';
 
@@ -315,6 +316,19 @@ export default function PublicView() {
 
                   if (isImage) {
                     return <img src={resource.file_url} alt={resource.title} className="w-full rounded-lg shadow-lg" />;
+                  }
+
+                  if (isHTML) {
+                    return (
+                      <div className="overflow-hidden rounded-lg border-2 border-indigo-200 shadow-xl" style={{ height: 'calc(100vh - 400px)', minHeight: '500px' }}>
+                        <iframe
+                          src={resource.file_url}
+                          className="w-full h-full bg-white"
+                          sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+                          title={resource.title}
+                        />
+                      </div>
+                    );
                   }
 
                   if (isPDF) {
