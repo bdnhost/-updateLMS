@@ -12,12 +12,12 @@ import json
 
 load_dotenv()
 
-BASE44_PROJECT_ID = os.getenv('BASE44_PROJECT_ID')
+BASE44_APP_ID = os.getenv('BASE44_APP_ID')
 BASE44_API_KEY = os.getenv('BASE44_API_KEY')
-BASE_URL = 'https://api.base44.com/api/v1'
+BASE_URL = 'https://app.base44.com/api/apps'
 
 headers = {
-    'Authorization': f'Bearer {BASE44_API_KEY}',
+    'api_key': BASE44_API_KEY,
     'Content-Type': 'application/json'
 }
 
@@ -27,7 +27,7 @@ def main():
 
     # קבלת כל המטלות
     response = requests.get(
-        f'{BASE_URL}/data/{BASE44_PROJECT_ID}/Assignment',
+        f'{BASE_URL}/{BASE44_APP_ID}/entities/Assignment',
         headers=headers
     )
 
