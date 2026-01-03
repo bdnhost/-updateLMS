@@ -17,6 +17,15 @@ BASE44_APP_ID = os.getenv('BASE44_APP_ID')
 BASE44_API_KEY = os.getenv('BASE44_API_KEY')
 BASE_URL = 'https://app.base44.com/api/apps'
 
+# בדיקה שיש ערכים
+if not BASE44_APP_ID:
+    print("❌ חסר BASE44_APP_ID בקובץ .env")
+    sys.exit(1)
+
+if not BASE44_API_KEY:
+    print("❌ חסר BASE44_API_KEY בקובץ .env")
+    sys.exit(1)
+
 headers = {
     'api_key': BASE44_API_KEY,
     'Content-Type': 'application/json'
