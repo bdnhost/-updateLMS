@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דיאגנוסטיקה - רשומות חסרות</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .config {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .entity-result {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .entity-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .stat-box {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .stat-value.missing {
+            color: #f44336;
+        }
+        .stat-value.ok {
+            color: #4CAF50;
+        }
+        .analysis {
+            margin-top: 15px;
+        }
+        .analysis-section {
+            background: #f9f9f9;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .analysis-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .analysis-item {
+            padding: 5px;
+            border-right: 3px solid #2196F3;
+            margin: 3px 0;
+            padding-right: 10px;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .summary-table th,
+        .summary-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        .summary-table th {
+            background: #4CAF50;
+            color: white;
+        }
+        .summary-table tr:hover {
+            background: #f5f5f5;
+        }
+        .recommendations {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-right: 4px solid #2196F3;
+        }
+        .recommendations h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .recommendation-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #bbdefb;
+        }
+        .recommendation-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 דיאגנוסטיקה - בדיקת רשומות חסרות</h1>
+
+        <div class="config">
+            <h3>הגדרות API</h3>
+            <label>
+                App ID:
+                <input type="text" id="appId" value="693824c5c1ad33c1f114ebd2" placeholder="App ID">
+            </label>
+            <label>
+                API Key:
+                <input type="text" id="apiKey" value="c0ce546b5661436dacb7a2060b10c9a5" placeholder="API Key">
+            </label>
+            <button onclick="runDiagnostics()">הרץ דיאגנוסטיקה</button>
+            <button onclick="downloadResults()" id="downloadBtn" style="display:none; background:#2196F3;">הורד תוצאות JSON</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let globalResults = {};
+
+        async function getAllRecords(appId, apiKey, entityName, pageSize = 100) {
+            const allRecords = [];
+            let skip = 0;
+            const baseUrl = `https://app.base44.com/api/apps/${appId}/entities`;
+            const headers = {
+                "api_key": apiKey,
+                "Content-Type": "application/json"
+            };
+
+            while (true) {
+                const url = `${baseUrl}/${entityName}?limit=${pageSize}&skip=${skip}`;
+
+                try {
+                    const response = await fetch(url, { headers });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+                    }
+
+                    const data = await response.json();
+                    const records = data.data || [];
+
+                    if (records.length === 0) break;
+
+                    allRecords.push(...records);
+                    skip += pageSize;
+
+                    if (records.length < pageSize) break;
+
+                } catch (error) {
+                    console.error(`Error fetching ${entityName}:`, error);
+                    throw error;
+                }
+            }
+
+            return allRecords;
+        }
+
+        function analyzeRecords(records) {
+            const analysis = {
+                deleted: {},
+                archived: {},
+                status: {},
+                is_active: {},
+                organization: {},
+                visibility: {},
+                public: {}
+            };
+
+            records.forEach(record => {
+                // Count deleted
+                const deleted = record.deleted || false;
+                analysis.deleted[deleted] = (analysis.deleted[deleted] || 0) + 1;
+
+                // Count archived
+                const archived = record.archived || false;
+                analysis.archived[archived] = (analysis.archived[archived] || 0) + 1;
+
+                // Count status
+                if (record.status) {
+                    analysis.status[record.status] = (analysis.status[record.status] || 0) + 1;
+                }
+
+                // Count is_active
+                if ('is_active' in record) {
+                    analysis.is_active[record.is_active] = (analysis.is_active[record.is_active] || 0) + 1;
+                }
+
+                // Count organizations
+                if (record.organization) {
+                    const orgId = typeof record.organization === 'object' ?
+                        record.organization._id : record.organization;
+                    analysis.organization[orgId] = (analysis.organization[orgId] || 0) + 1;
+                }
+
+                // Count visibility
+                if (record.visibility) {
+                    analysis.visibility[record.visibility] = (analysis.visibility[record.visibility] || 0) + 1;
+                }
+
+                // Count public
+                if ('public' in record) {
+                    analysis.public[record.public] = (analysis.public[record.public] || 0) + 1;
+                }
+            });
+
+            return analysis;
+        }
+
+        function generateRecommendations(results) {
+            const recommendations = [];
+
+            Object.entries(results).forEach(([entity, data]) => {
+                if (data.missing > 0) {
+                    const { analysis, actual } = data;
+
+                    // Check for deleted records
+                    if (analysis.deleted && analysis.deleted[true]) {
+                        const count = analysis.deleted[true];
+                        const percent = ((count / actual) * 100).toFixed(1);
+                        recommendations.push({
+                            entity,
+                            type: 'deleted',
+                            message: `${entity}: נמצאו ${count} רשומות מסומנות כ-deleted (${percent}%). ייתכן שהקוד מסנן אותן.`
+                        });
+                    }
+
+                    // Check for archived records
+                    if (analysis.archived && analysis.archived[true]) {
+                        const count = analysis.archived[true];
+                        const percent = ((count / actual) * 100).toFixed(1);
+                        recommendations.push({
+                            entity,
+                            type: 'archived',
+                            message: `${entity}: נמצאו ${count} רשומות מסומנות כ-archived (${percent}%). ייתכן שהקוד מסנן אותן.`
+                        });
+                    }
+
+                    // Check for multiple organizations
+                    if (analysis.organization && Object.keys(analysis.organization).length > 1) {
+                        const orgCount = Object.keys(analysis.organization).length;
+                        recommendations.push({
+                            entity,
+                            type: 'organization',
+                            message: `${entity}: נמצאו ${orgCount} ארגונים שונים. ייתכן שהממשק מציג רק ארגון אחד.`
+                        });
+                    }
+
+                    // Check for is_active false
+                    if (analysis.is_active && analysis.is_active[false]) {
+                        const count = analysis.is_active[false];
+                        const percent = ((count / actual) * 100).toFixed(1);
+                        recommendations.push({
+                            entity,
+                            type: 'is_active',
+                            message: `${entity}: נמצאו ${count} רשומות עם is_active=false (${percent}%). ייתכן שהקוד מסנן אותן.`
+                        });
+                    }
+                }
+            });
+
+            return recommendations;
+        }
+
+        function renderResults(results, recommendations) {
+            const resultsDiv = document.getElementById('results');
+
+            // Summary table
+            let html = '<h2>סיכום כולל</h2>';
+            html += '<table class="summary-table">';
+            html += '<tr><th>ישות</th><th>צפוי</th><th>התקבל</th><th>חסר</th><th>%</th></tr>';
+
+            Object.entries(results).forEach(([entity, data]) => {
+                const percent = data.expected > 0 ? ((data.actual / data.expected) * 100).toFixed(1) : 0;
+                const className = data.missing > 0 ? 'missing' : 'ok';
+                html += `<tr>
+                    <td><strong>${entity}</strong></td>
+                    <td>${data.expected}</td>
+                    <td>${data.actual}</td>
+                    <td class="${className}">${data.missing}</td>
+                    <td>${percent}%</td>
+                </tr>`;
+            });
+
+            html += '</table>';
+
+            // Recommendations
+            if (recommendations.length > 0) {
+                html += '<div class="recommendations">';
+                html += '<h3>💡 המלצות לפתרון</h3>';
+                recommendations.forEach(rec => {
+                    html += `<div class="recommendation-item">• ${rec.message}</div>`;
+                });
+                html += '</div>';
+            }
+
+            // Detailed results
+            html += '<h2>תוצאות מפורטות</h2>';
+
+            Object.entries(results).forEach(([entity, data]) => {
+                html += `<div class="entity-result">`;
+                html += `<div class="entity-title">${entity}</div>`;
+
+                html += '<div class="stats">';
+                html += `<div class="stat-box">
+                    <div class="stat-label">צפוי</div>
+                    <div class="stat-value">${data.expected}</div>
+                </div>`;
+                html += `<div class="stat-box">
+                    <div class="stat-label">התקבל</div>
+                    <div class="stat-value ${data.missing > 0 ? 'missing' : 'ok'}">${data.actual}</div>
+                </div>`;
+                html += `<div class="stat-box">
+                    <div class="stat-label">חסר</div>
+                    <div class="stat-value ${data.missing > 0 ? 'missing' : 'ok'}">${data.missing}</div>
+                </div>`;
+                html += '</div>';
+
+                // Analysis
+                html += '<div class="analysis">';
+
+                Object.entries(data.analysis).forEach(([field, counts]) => {
+                    if (Object.keys(counts).length > 0) {
+                        html += `<div class="analysis-section">`;
+                        html += `<div class="analysis-title">${field}:</div>`;
+                        Object.entries(counts).sort((a, b) => b[1] - a[1]).forEach(([value, count]) => {
+                            const percent = ((count / data.actual) * 100).toFixed(1);
+                            html += `<div class="analysis-item">${value}: ${count} (${percent}%)</div>`;
+                        });
+                        html += '</div>';
+                    }
+                });
+
+                html += '</div>';
+
+                // Sample record
+                if (data.sample) {
+                    html += '<details style="margin-top: 10px;">';
+                    html += '<summary style="cursor: pointer; font-weight: bold;">🔍 דוגמה לרשומה</summary>';
+                    html += `<pre>${JSON.stringify(data.sample, null, 2)}</pre>`;
+                    html += '</details>';
+                }
+
+                html += '</div>';
+            });
+
+            resultsDiv.innerHTML = html;
+            document.getElementById('downloadBtn').style.display = 'inline-block';
+        }
+
+        async function runDiagnostics() {
+            const appId = document.getElementById('appId').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+
+            if (!appId || !apiKey) {
+                alert('נא למלא App ID ו-API Key');
+                return;
+            }
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="loading">⏳ טוען נתונים מ-Base44...</div>';
+
+            const entities = {
+                'Course': 55,
+                'CourseSession': 77,
+                'Assignment': 74,
+                'Material': 371
+            };
+
+            globalResults = {};
+
+            try {
+                for (const [entityName, expectedCount] of Object.entries(entities)) {
+                    resultsDiv.innerHTML += `<div class="loading">📊 מנתח ${entityName}...</div>`;
+
+                    const records = await getAllRecords(appId, apiKey, entityName);
+                    const analysis = analyzeRecords(records);
+
+                    globalResults[entityName] = {
+                        expected: expectedCount,
+                        actual: records.length,
+                        missing: expectedCount - records.length,
+                        analysis: analysis,
+                        sample: records[0] || null
+                    };
+                }
+
+                const recommendations = generateRecommendations(globalResults);
+                renderResults(globalResults, recommendations);
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ שגיאה: ${error.message}</div>`;
+                console.error(error);
+            }
+        }
+
+        function downloadResults() {
+            const dataStr = JSON.stringify(globalResults, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'diagnosis_results.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
