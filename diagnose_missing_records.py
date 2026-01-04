@@ -51,7 +51,14 @@ def get_all_records(entity_name, page_size=100):
             break
 
         data = response.json()
-        records = data.get('data', [])
+
+        # Handle both list and object responses
+        if isinstance(data, list):
+            records = data
+        elif isinstance(data, dict):
+            records = data.get('data', [])
+        else:
+            records = []
 
         if not records:
             break
