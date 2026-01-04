@@ -30,13 +30,13 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-# ה-organization_id הנכון - ארגון admin
-CORRECT_ORG_ID = "695275079f3f0f2b9a67a799"
+# ה-organization_id הנכון - ארגון BdnHosT (adnanfadelisrael@gmail.com)
+CORRECT_ORG_ID = "69391901350762829f9a50b1"
 
 print("="*80)
 print("🔧 עדכון Organization ID לכל הרשומות")
 print("="*80)
-print(f"Organization ID היעד: {CORRECT_ORG_ID} (admin)")
+print(f"Organization ID היעד: {CORRECT_ORG_ID} (BdnHosT - adnanfadelisrael@gmail.com)")
 print()
 
 def get_all_records_no_filter(entity_name, page_size=100):
@@ -136,7 +136,8 @@ def fix_entity(entity_name):
 
 # Main
 print("⚠️  שים לב: הסקריפט הזה יעדכן את organization_id של כל הרשומות")
-print(f"   לארגון: admin (ID: {CORRECT_ORG_ID})")
+print(f"   לארגון: BdnHosT (adnanfadelisrael@gmail.com)")
+print(f"   Organization ID: {CORRECT_ORG_ID}")
 print()
 
 entities_to_fix = ['Course', 'CourseSession', 'Assignment', 'Material']
